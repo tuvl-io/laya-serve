@@ -1,0 +1,9 @@
+This repository's build files are MIT-licensed (see LICENSE).
+
+The container image it builds redistributes third-party software:
+
+- laya (https://pypi.org/project/laya/) — Apache License 2.0
+- Laya model weights, convaiinnovations/laya on Hugging Face — Apache License 2.0
+- PyTorch, Transformers, FastAPI, Uvicorn and their dependencies — under their own licenses
+
+Laya is developed by Convai Innovations; this project is not affiliated with them.

@@ -1,0 +1,9 @@
+# Local Laya for tuvl development: docker compose up -d
+services:
+  laya:
+    image: ${LAYA_IMAGE:-laya-serve:0.4.1}
+    ports: ["127.0.0.1:8000:8000"]
+    environment:
+      LAYA_API_KEY: ${LAYA_API_KEY:-}
+      LAYA_THREADS: ${LAYA_THREADS:-4}
+    restart: unless-stopped
