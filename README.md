@@ -70,6 +70,14 @@ project uses it (or with `--with-laya`). See the tuvl docs: Decide → Decision 
 3. The reviewed weight commit comes from the `laya` package (`laya.revisions.PINNED_REVISIONS`), so a
    package bump also moves the weights — check the build log's `verified … @<commit>` line.
 
+## Publishing
+
+CI builds and smoke-tests the image on native amd64 and arm64 runners for every push and pull
+request. Pushing a `v*` tag (e.g. `v0.4.1`) also publishes both architectures to Docker Hub as one
+tag, `<namespace>/laya-serve:<version>`, plus `:latest` unless the version is a pre-release. The
+repository needs the secrets `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` (a Read & Write access
+token), and optionally the variable `DOCKERHUB_NAMESPACE` when publishing to an organization.
+
 ## Licence
 
 MIT for this repository's build files; the image redistributes Apache-2.0 Laya code and weights.
