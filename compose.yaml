@@ -1,4 +1,5 @@
 # Local Laya for tuvl development: docker compose up -d
+# LAYA_IMAGE=laya-serve:0.4.7-en for the English-only image (set `model: english`).
 services:
   laya:
     image: ${LAYA_IMAGE:-laya-serve:0.4.7}

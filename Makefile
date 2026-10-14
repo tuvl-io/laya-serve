@@ -4,7 +4,7 @@ TAG         ?= $(LAYA)
 LAYA_MODELS ?= english,multilingual
 PORT        ?= 8000
 
-.PHONY: lock build run smoke stop
+.PHONY: lock build build-en run smoke stop inspect
 
 lock:  ## re-resolve requirements.lock (hash-pinned, CPU torch)
 	uv pip compile requirements.in --universal --generate-hashes -p 3.12 \
@@ -13,6 +13,13 @@ lock:  ## re-resolve requirements.lock (hash-pinned, CPU torch)
 
 build:
 	docker build --build-arg LAYA_MODELS=$(LAYA_MODELS) -t $(IMAGE):$(TAG) .
+
+build-en:  ## English-only variant, tagged <version>-en
+	$(MAKE) build LAYA_MODELS=english TAG=$(LAYA)-en
+
+inspect:  ## per-layer sizes and what the weights layer holds
+	docker history --no-trunc=false --format '{{.Size}}\t{{.CreatedBy}}' $(IMAGE):$(TAG) | cut -c1-110
+	docker run --rm --entrypoint sh $(IMAGE):$(TAG) -c 'du -ah -d 3 /opt/hf | sort -h | tail -12; du -sh /opt/venv'
 
 run:
 	docker run -d --rm --name laya-serve -p $(PORT):8000 $(IMAGE):$(TAG)
