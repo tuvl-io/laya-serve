@@ -1,8 +1,10 @@
 name: CI
 
 # Builds and smoke-tests the image on native amd64 and arm64 runners. A `v*` tag also
-# publishes it to Docker Hub as one multi-arch tag: <namespace>/laya-serve:<version>
-# (and :latest for a final release).
+# publishes two variants to Docker Hub, each as one multi-arch tag:
+#   <namespace>/laya-serve:<version>      english + multilingual (the default)
+#   <namespace>/laya-serve:<version>-en   english only, about 0.7 GB smaller
+# (and :latest / :latest-en for a final release).
 #
 # Repository settings:
 #   secrets   DOCKERHUB_USERNAME, DOCKERHUB_TOKEN (a Docker Hub access token, Read & Write)
@@ -23,15 +25,15 @@ concurrency:
 
 jobs:
   image:
-    name: Build + smoke (${{ matrix.arch }})
+    name: Build + smoke (${{ matrix.arch }}, ${{ matrix.variant }})
     strategy:
       fail-fast: true
       matrix:
         include:
-          - arch: amd64
-            runner: ubuntu-24.04
-          - arch: arm64
-            runner: ubuntu-24.04-arm
+          - {arch: amd64, runner: ubuntu-24.04, variant: full, models: "english,multilingual"}
+          - {arch: arm64, runner: ubuntu-24.04-arm, variant: full, models: "english,multilingual"}
+          - {arch: amd64, runner: ubuntu-24.04, variant: en, models: "english"}
+          - {arch: arm64, runner: ubuntu-24.04-arm, variant: en, models: "english"}
     runs-on: ${{ matrix.runner }}
     steps:
       - uses: actions/checkout@v4
@@ -51,8 +53,10 @@ jobs:
           platforms: linux/${{ matrix.arch }}
           load: true
           tags: laya-serve:ci
+          build-args: LAYA_MODELS=${{ matrix.models }}
+          # the english variant reuses the full build's dependency layers and caches nothing itself
           cache-from: type=gha,scope=${{ matrix.arch }}
-          cache-to: type=gha,scope=${{ matrix.arch }},mode=max
+          cache-to: ${{ matrix.variant == 'full' && format('type=gha,scope={0},mode=max', matrix.arch) || '' }}
 
       - name: Smoke test
         run: |
@@ -82,6 +86,7 @@ jobs:
         with:
           context: .
           platforms: linux/${{ matrix.arch }}
+          build-args: LAYA_MODELS=${{ matrix.models }}
           cache-from: type=gha,scope=${{ matrix.arch }}
           outputs: type=image,name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=true
 
@@ -96,19 +101,24 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: startsWith(github.ref, 'refs/tags/v')
         with:
-          name: digest-${{ matrix.arch }}
+          name: digest-${{ matrix.variant }}-${{ matrix.arch }}
           path: /tmp/digests/*
           retention-days: 1
 
   publish:
-    name: Publish multi-arch tag
+    name: Publish multi-arch tag (${{ matrix.variant }})
     if: startsWith(github.ref, 'refs/tags/v')
     needs: image
     runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        include:
+          - {variant: full, suffix: ""}
+          - {variant: en, suffix: "-en"}
     steps:
       - uses: actions/download-artifact@v4
         with:
-          pattern: digest-*
+          pattern: digest-${{ matrix.variant }}-*
           merge-multiple: true
           path: /tmp/digests
 
@@ -123,12 +133,13 @@ jobs:
         working-directory: /tmp/digests
         env:
           IMAGE: docker.io/${{ vars.DOCKERHUB_NAMESPACE || secrets.DOCKERHUB_USERNAME }}/laya-serve
+          SUFFIX: ${{ matrix.suffix }}
         run: |
           version="${GITHUB_REF_NAME#v}"
-          tags=(-t "$IMAGE:$version")
+          tags=(-t "$IMAGE:$version$SUFFIX")
           # 0.4.7-1 is a rebuild of laya 0.4.7 and moves :latest; 0.5.0-rc.1 (alpha/beta/rc) never does
-          [[ "$version" =~ -(alpha|beta|rc) ]] || tags+=(-t "$IMAGE:latest")
+          [[ "$version" =~ -(alpha|beta|rc) ]] || tags+=(-t "$IMAGE:latest$SUFFIX")
           sources=()
           for digest in *; do sources+=("$IMAGE@sha256:$digest"); done
           docker buildx imagetools create "${tags[@]}" "${sources[@]}"
-          docker buildx imagetools inspect "$IMAGE:$version"
+          docker buildx imagetools inspect "$IMAGE:$version$SUFFIX"
