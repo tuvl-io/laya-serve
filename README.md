@@ -14,6 +14,7 @@ served over the `POST /v1/systemone` protocol (the same wire format as TypeSafe'
 
 ```bash
 make build                     # laya-serve:0.4.7 with english + multilingual checkpoints
+make build-en                  # laya-serve:0.4.7-en, english only (about 0.7 GB smaller)
 make run && make smoke         # starts on 127.0.0.1:8000 and asks one question
 ```
 
@@ -30,6 +31,18 @@ curl -s localhost:8000/v1/systemone -H 'content-type: application/json' -d '{
 Each answer carries the `choice`, a `probabilities` map, `confidence` (1 − normalised entropy) and
 `answer_confidence` (the calibrated probability of the chosen value).
 
+## Images
+
+| Tag | Checkpoints | Use |
+|---|---|---|
+| `<version>-en` | english | English-only traffic; the smaller image and about half the memory |
+| `<version>` | english + multilingual | Mixed-language traffic, or `model: auto` |
+
+An `-en` image has no multilingual weights and runs offline, so a request routed to `multilingual`
+(non-English text with `model: auto`, or `model: multilingual`) fails with HTTP 500
+`inference failed`. Pin `model: english` with `-en`, and use the full tag otherwise. The English
+image uses about 2 GiB of memory against about 3.5 GiB for the full one.
+
 ## Checkpoints
 
 Chosen at build time with `LAYA_MODELS` (`make build LAYA_MODELS=english`):
@@ -41,7 +54,8 @@ Chosen at build time with `LAYA_MODELS` (`make build LAYA_MODELS=english`):
 | `typed-decisions` | ~0.9 GB | Fine-tuned on four specific workflows; only used when asked for explicitly |
 
 The default (`english,multilingual`) builds a ~2.7 GB image and uses ~3.5 GB of memory with both
-checkpoints loaded. Build with `LAYA_MODELS=english` for English-only traffic.
+checkpoints loaded. `LAYA_MODELS=english` (the `-en` image) keeps one checkpoint resident.
+`make inspect` prints the per-layer sizes and what the weights layer holds.
 
 ## Configuration
 
@@ -74,7 +88,8 @@ project uses it (or with `--with-laya`). See the tuvl docs: Decide → Decision 
 
 CI builds and smoke-tests the image on native amd64 and arm64 runners for every push and pull
 request. Pushing a `v*` tag (e.g. `v0.4.7`) also publishes both architectures to Docker Hub as one
-tag, `<namespace>/laya-serve:<version>`, plus `:latest` unless the version is a pre-release.
+tag per variant, `<namespace>/laya-serve:<version>` and `<version>-en`, plus `:latest` and
+`:latest-en` unless the version is a pre-release.
 
 The image version is the Laya version it serves, which also pins the weights. A rebuild of the same
 Laya version (a base-image or dependency fix) adds a build number: `v0.4.7-1`, `v0.4.7-2`; it moves
