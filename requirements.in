@@ -1,3 +1,3 @@
 # The Laya server and CPU-only torch. Locked with hashes in requirements.lock (make lock).
-laya[serve]==0.4.1
+laya[serve]==0.4.7
 torch

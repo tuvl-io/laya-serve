@@ -13,7 +13,7 @@ served over the `POST /v1/systemone` protocol (the same wire format as TypeSafe'
 ## Run it
 
 ```bash
-make build                     # laya-serve:0.4.1 with english + multilingual checkpoints
+make build                     # laya-serve:0.4.7 with english + multilingual checkpoints
 make run && make smoke         # starts on 127.0.0.1:8000 and asks one question
 ```
 
@@ -73,8 +73,12 @@ project uses it (or with `--with-laya`). See the tuvl docs: Decide → Decision 
 ## Publishing
 
 CI builds and smoke-tests the image on native amd64 and arm64 runners for every push and pull
-request. Pushing a `v*` tag (e.g. `v0.4.1`) also publishes both architectures to Docker Hub as one
-tag, `<namespace>/laya-serve:<version>`, plus `:latest` unless the version is a pre-release. The
+request. Pushing a `v*` tag (e.g. `v0.4.7`) also publishes both architectures to Docker Hub as one
+tag, `<namespace>/laya-serve:<version>`, plus `:latest` unless the version is a pre-release.
+
+The image version is the Laya version it serves, which also pins the weights. A rebuild of the same
+Laya version (a base-image or dependency fix) adds a build number: `v0.4.7-1`, `v0.4.7-2`; it moves
+`:latest` too. `-alpha`, `-beta` and `-rc` tags are pre-releases and never do. The
 repository needs the secrets `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` (a Read & Write access
 token), and optionally the variable `DOCKERHUB_NAMESPACE` when publishing to an organization.
 

@@ -126,8 +126,8 @@ jobs:
         run: |
           version="${GITHUB_REF_NAME#v}"
           tags=(-t "$IMAGE:$version")
-          # pre-releases (0.5.0-rc.1) never move :latest
-          [[ "$version" == *-* ]] || tags+=(-t "$IMAGE:latest")
+          # 0.4.7-1 is a rebuild of laya 0.4.7 and moves :latest; 0.5.0-rc.1 (alpha/beta/rc) never does
+          [[ "$version" =~ -(alpha|beta|rc) ]] || tags+=(-t "$IMAGE:latest")
           sources=()
           for digest in *; do sources+=("$IMAGE@sha256:$digest"); done
           docker buildx imagetools create "${tags[@]}" "${sources[@]}"
