@@ -36,7 +36,7 @@ LABEL org.opencontainers.image.title="laya-serve" \
       org.opencontainers.image.url="https://tuvl.io" \
       org.opencontainers.image.documentation="https://tuvl.dev" \
       org.opencontainers.image.source="https://github.com/tuvl-io/laya-serve" \
-      org.opencontainers.image.licenses="MIT AND Apache-2.0"
+      org.opencontainers.image.licenses="Apache-2.0"
 RUN useradd --system --uid 10001 --home-dir /nonexistent --shell /usr/sbin/nologin laya
 COPY --from=deps /opt/venv /opt/venv
 COPY --from=weights --chown=laya:laya /opt/hf /opt/hf
