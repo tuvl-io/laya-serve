@@ -99,5 +99,5 @@ token), and optionally the variable `DOCKERHUB_NAMESPACE` when publishing to an 
 
 ## Licence
 
-MIT for this repository's build files; the image redistributes Apache-2.0 Laya code and weights.
+Apache-2.0 for this repository's build files (versions through 0.4.7 were MIT); the image redistributes Apache-2.0 Laya code and weights.
 See [NOTICE](NOTICE).
