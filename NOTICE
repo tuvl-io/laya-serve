@@ -1,4 +1,8 @@
-This repository's build files are MIT-licensed (see LICENSE).
+laya-serve
+Copyright 2026 tuvl.io
+
+This repository's build files are licensed under the Apache License, Version 2.0 (see LICENSE).
+Versions through 0.4.7 were published under the MIT License.
 
 The container image it builds redistributes third-party software:
 
@@ -7,3 +11,9 @@ The container image it builds redistributes third-party software:
 - PyTorch, Transformers, FastAPI, Uvicorn and their dependencies — under their own licenses
 
 Laya is developed by Convai Innovations; this project is not affiliated with them.
+
+Trademarks
+----------
+The Apache License does not grant permission to use the names, logos or trademarks of
+tuvl.io, including "tuvl", "tuvl insight" and the feather mark, except as needed to
+describe the origin of the software.
