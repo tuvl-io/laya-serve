@@ -36,7 +36,7 @@ jobs:
           - {arch: arm64, runner: ubuntu-24.04-arm, variant: en, models: "english"}
     runs-on: ${{ matrix.runner }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # the image is ~2.7 GB and its build stages need several more
       - name: Free disk space
