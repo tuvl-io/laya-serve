@@ -116,7 +116,7 @@ jobs:
           - {variant: full, suffix: ""}
           - {variant: en, suffix: "-en"}
     steps:
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           pattern: digest-${{ matrix.variant }}-*
           merge-multiple: true
