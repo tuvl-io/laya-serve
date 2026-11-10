@@ -9,7 +9,9 @@ PORT        ?= 8000
 lock:  ## re-resolve requirements.lock (hash-pinned, CPU torch)
 	uv pip compile requirements.in --universal --generate-hashes -p 3.12 \
 	  --index-url https://download.pytorch.org/whl/cpu --extra-index-url https://pypi.org/simple \
-	  --index-strategy unsafe-best-match --no-header -o requirements.lock
+	  --index-strategy unsafe-best-match --no-header \
+	  --no-emit-package vegaml --no-emit-package cryptography --no-emit-package cffi --no-emit-package pycparser \
+	  -o requirements.lock
 
 build:
 	docker build --build-arg LAYA_MODELS=$(LAYA_MODELS) -t $(IMAGE):$(TAG) .
