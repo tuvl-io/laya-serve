@@ -1,3 +1,6 @@
 # The Laya server and CPU-only torch. Locked with hashes in requirements.lock (make lock).
-laya[serve]==0.4.7
+laya[serve]==0.4.31
 torch
+# laya 0.4.23+ lists vegaml, which turns on a Vega lane in the router (states past 8,192 tokens, images, audio) that
+# downloads a reader at request time. This image is offline and ships no Vega weights, so `make lock` leaves vegaml
+# (and cryptography, cffi, pycparser, which only it needs) out: the router then behaves as it did before 0.4.25.

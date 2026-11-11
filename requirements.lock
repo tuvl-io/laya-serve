@@ -86,6 +86,7 @@ huggingface-hub==2.2.0 \
     #   laya
     #   tokenizers
     #   transformers
+    #   vegaml
 idna==3.20 \
     --hash=sha256:a7db850025b95ded1eae8a46181a1a6c56c92c96f0e2b005d9ff8dc0210cab44 \
     --hash=sha256:ab7ae7122974553370f0bdb919e1a960b2cd1bc1ef0276416d896db81c14582c
@@ -96,9 +97,9 @@ jinja2==3.1.6 \
     --hash=sha256:0137fb05990d35f1275a587e9aee6d56da821fc83491a0fb838183be43f66d6d \
     --hash=sha256:85ece4451f492d0c13c5dd7c13a64681a86afae63a5f347908daf103ce6d2f67
     # via torch
-laya==0.4.7 \
-    --hash=sha256:c16f6e8b124baefa0d3d08a4eeb72c72ac54b06281155f383f7c8b7f37b91b50 \
-    --hash=sha256:c3f567f21ce9860eb063c67b35316d5498881e6856f6d58f2b05ce4311e8b2c9
+laya==0.4.31 \
+    --hash=sha256:65a51283c7d63f1126df65739bfcf47151c98ca8ef98f987d10dcfab201b87f9 \
+    --hash=sha256:aa3d25996d0d61eccb3143702702ee3116e159a5e374e138209bd331c8f67d0a
     # via -r requirements.in
 markdown-it-py==4.2.0 \
     --hash=sha256:04a21681d6fbb623de53f6f364d352309d4094dd4194040a10fd51833e418d49 \
@@ -339,6 +340,7 @@ numpy==2.5.3 \
     # via
     #   laya
     #   transformers
+    #   vegaml
 opentelemetry-api==1.45.1 \
     --hash=sha256:aa38ed19bcc084ba42782a73255b3582283eced7ad6dddbd6695189e69adfb75 \
     --hash=sha256:b31553efa588ae44bc306f863c785c5333a9ecc091248c6ee68b4b6c87fdedfb
@@ -734,6 +736,7 @@ safetensors==0.8.0 \
     # via
     #   laya
     #   transformers
+    #   vegaml
 setuptools==84.0.0 \
     --hash=sha256:51a52592b3b99e102b609654876bd65f19f999935166d1352678931132b0c670 \
     --hash=sha256:f4695c21257f0d9b537ec2692c941d02ee143b7cc1276941349a546573b2ef73
@@ -804,6 +807,7 @@ torch==2.14.1 ; sys_platform == 'darwin' \
     # via
     #   -r requirements.in
     #   laya
+    #   vegaml
 torch==2.14.1+cpu ; sys_platform != 'darwin' \
     --hash=sha256:100df7e44af5c973606cfef571a14b36b0acfd165d6bbc7aabe3edac95c9ccbd \
     --hash=sha256:192745b92c9ac392298e73de950cd02d8a7886117923073d890625622d343ede \
@@ -841,6 +845,7 @@ torch==2.14.1+cpu ; sys_platform != 'darwin' \
     # via
     #   -r requirements.in
     #   laya
+    #   vegaml
 tqdm==4.70.1 \
     --hash=sha256:c293e525e6fef9c20e8728fd4612df02a0aa31bb5fe91ecd93e123b1b7bffa73 \
     --hash=sha256:cefd0eca11b2a37a3aee776544d4f4ae913f02688135b5556b8788dfa474afc4
@@ -850,7 +855,9 @@ tqdm==4.70.1 \
 transformers==5.19.0 \
     --hash=sha256:87f38dd25e4521151b97e94520ac457f44a0ae8a8358a5b112daff6c64a822d6 \
     --hash=sha256:afcd2dd5f603ed28c1e1fcb00a338ccbb4ef5f878ed289635df8b58187afb518
-    # via laya
+    # via
+    #   laya
+    #   vegaml
 truststore==0.10.4 ; sys_platform != 'emscripten' \
     --hash=sha256:9d91bd436463ad5e4ee4aba766628dd6cd7010cf3e2461756b3303710eebc301 \
     --hash=sha256:adaeaecf1cbb5f4de3b1959b42d41f6fab57b2b1666adb59e89cb0b53361d981
@@ -885,3 +892,9 @@ uvicorn==0.54.0 \
     --hash=sha256:505bdb0f318731d45f1f712071fc781a8981f6847a31c902c9f5e652d4f67faf \
     --hash=sha256:a2e33cbfaa0306f8e6b0c13e0cb89d7d7a2da3e62b90c66e18c33d9807b28620
     # via laya
+
+# The following packages were excluded from the output:
+# vegaml
+# cryptography
+# cffi
+# pycparser
